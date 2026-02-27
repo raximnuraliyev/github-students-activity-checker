@@ -9,10 +9,41 @@ public class AppDbContext : DbContext
 
     public DbSet<Student> Students => Set<Student>();
     public DbSet<DailyContribution> DailyContributions => Set<DailyContribution>();
+    public DbSet<BotUser> BotUsers => Set<BotUser>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        // ---------- BotUser ----------
+        modelBuilder.Entity<BotUser>(entity =>
+        {
+            entity.ToTable("bot_users");
+            entity.HasKey(e => e.ChatId);
+
+            entity.Property(e => e.ChatId)
+                .HasColumnName("chat_id")
+                .ValueGeneratedNever();
+
+            entity.Property(e => e.Username)
+                .HasColumnName("username")
+                .HasMaxLength(255);
+
+            entity.Property(e => e.Role)
+                .HasColumnName("role")
+                .HasConversion<string>()
+                .HasMaxLength(50)
+                .HasDefaultValue(BotUserRole.Student);
+
+            entity.Property(e => e.Language)
+                .HasColumnName("language")
+                .HasMaxLength(5)
+                .HasDefaultValue("en");
+
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("now()");
+        });
 
         // ---------- Student ----------
         modelBuilder.Entity<Student>(entity =>

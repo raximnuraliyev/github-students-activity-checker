@@ -6,4 +6,9 @@ public class TelegramSettings
 
     public string BotToken { get; set; } = string.Empty;
     public long[] AuthorizedChatIds { get; set; } = [];
+
+    /// <summary>
+    /// Telegram username (without @) of the Head admin who can manage other admins.
+    /// </summary>
+    public string HeadUsername { get; set; } = "rahimnuraliev";
 }
