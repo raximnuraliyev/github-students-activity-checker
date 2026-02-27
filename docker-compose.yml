@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: gam-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: github_activity_monitor
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer:latest
+    container_name: gam-adminer
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: dracula
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./GithubActivityChecker
+      dockerfile: Dockerfile
+    container_name: gam-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=github_activity_monitor;Username=postgres;Password=postgres"
+      GitHub__PersonalAccessToken: "${GITHUB_PAT}"
+      Telegram__BotToken: "${TELEGRAM_BOT_TOKEN}"
+      Telegram__AuthorizedChatIds__0: "${TELEGRAM_CHAT_ID}"
+    volumes:
+      - app-logs:/app/logs
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  app-logs:
