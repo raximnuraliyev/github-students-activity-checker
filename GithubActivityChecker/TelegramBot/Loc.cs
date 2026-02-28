@@ -477,13 +477,26 @@ public static class Loc
 
                 📊 *Visualization* \(optional: 1d, 7d, 30d\)
                 /vis\_activity \[period\] — Activity bar chart
-                /vis\_dist \[period\] — Contribution distribution histogram
-                /vis\_trend \[period\] — Usage trend line graph
-                /vis\_pro \[period\] — Active vs Inactive pie chart
+                /vis\_dist \[period\] — Distribution histogram
+                /vis\_trend \[period\] — Usage trend line
+                /vis\_pro \[period\] — Active vs Inactive donut
+                /vis\_heatmap \[period\] — Activity heatmap
+                /vis\_area \[period\] — Cumulative area chart
+                /vis\_scatter \[period\] — Student scatter map
+                /vis\_gauge \[period\] — License KPI gauge
+                /vis\_waterfall \[period\] — Period changes
+                /vis\_funnel \[period\] — Engagement funnel
+                /vis\_top \[period\] — Top contributors chart
+                /vis\_weekly \[period\] — Weekly comparison
+                /vis\_dayofweek \[period\] — Day\-of\-week patterns
+                /vis\_stacked \[period\] — Stacked status bars
+                /charts — Interactive chart gallery
 
-                📈 *Analytics*
+                📈 *Analytics \& Reports*
                 /top \[N\] — Top N contributors \(default: 10\)
                 /summary — Detailed analytics report
+                /report \[period\] — Full visual report \(all charts\)
+                /export — Enhanced CSV with analytics
 
                 📥 *Import*
                 /import — Import students from a CSV file
@@ -502,13 +515,26 @@ public static class Loc
 
                 📊 *Vizualizatsiya* \(ixtiyoriy: 1d, 7d, 30d\)
                 /vis\_activity \[davr\] — Faollik diagrammasi
-                /vis\_dist \[davr\] — Hissalar taqsimoti
+                /vis\_dist \[davr\] — Taqsimot histogrammasi
                 /vis\_trend \[davr\] — Trend grafigi
-                /vis\_pro \[davr\] — Faol/Nofaol nisbati
+                /vis\_pro \[davr\] — Faol/Nofaol donut
+                /vis\_heatmap \[davr\] — Issiqlik xaritasi
+                /vis\_area \[davr\] — Yig'ma maydon grafigi
+                /vis\_scatter \[davr\] — Talabalar scatter xaritasi
+                /vis\_gauge \[davr\] — Litsenziya KPI
+                /vis\_waterfall \[davr\] — Davr o'zgarishlari
+                /vis\_funnel \[davr\] — Jalb qilish voronkasi
+                /vis\_top \[davr\] — Top kontributorlar
+                /vis\_weekly \[davr\] — Haftalik taqqoslash
+                /vis\_dayofweek \[davr\] — Hafta kunlari
+                /vis\_stacked \[davr\] — Status bo'yicha
+                /charts — Interaktiv diagramma galereyasi
 
-                📈 *Analitika*
+                📈 *Analitika va hisobotlar*
                 /top \[N\] — Eng faol N ta talaba \(standart: 10\)
                 /summary — Batafsil analitika hisoboti
+                /report \[davr\] — To'liq vizual hisobot
+                /export — Kengaytirilgan CSV eksport
 
                 📥 *Import*
                 /import — CSV fayldan talabalarni import qilish
@@ -527,13 +553,26 @@ public static class Loc
 
                 📊 *Визуализация* \(опционально: 1d, 7d, 30d\)
                 /vis\_activity \[период\] — График активности
-                /vis\_dist \[период\] — Распределение вкладов
-                /vis\_trend \[период\] — График трендов
-                /vis\_pro \[период\] — Активные/Неактивные
+                /vis\_dist \[период\] — Гистограмма распределения
+                /vis\_trend \[период\] — Линия тренда
+                /vis\_pro \[период\] — Активные/Неактивные пончик
+                /vis\_heatmap \[период\] — Тепловая карта
+                /vis\_area \[период\] — Кумулятивная область
+                /vis\_scatter \[период\] — Карта активности
+                /vis\_gauge \[период\] — KPI лицензий
+                /vis\_waterfall \[период\] — Изменения за период
+                /vis\_funnel \[период\] — Воронка вовлечённости
+                /vis\_top \[период\] — Лучшие участники
+                /vis\_weekly \[период\] — Сравнение по неделям
+                /vis\_dayofweek \[период\] — По дням недели
+                /vis\_stacked \[период\] — По статусу
+                /charts — Галерея визуализаций
 
-                📈 *Аналитика*
+                📈 *Аналитика и отчёты*
                 /top \[N\] — Топ N участников \(по умолч\.: 10\)
                 /summary — Подробный аналитический отчёт
+                /report \[период\] — Полный визуальный отчёт
+                /export — Расширенный CSV с аналитикой
 
                 📥 *Импорт*
                 /import — Импорт студентов из CSV
@@ -555,13 +594,26 @@ public static class Loc
 
                 📊 *Visualization* \(optional: 1d, 7d, 30d\)
                 /vis\_activity \[period\] — Activity bar chart
-                /vis\_dist \[period\] — Contribution distribution histogram
-                /vis\_trend \[period\] — Usage trend line graph
-                /vis\_pro \[period\] — Active vs Inactive pie chart
+                /vis\_dist \[period\] — Distribution histogram
+                /vis\_trend \[period\] — Usage trend line
+                /vis\_pro \[period\] — Active vs Inactive donut
+                /vis\_heatmap \[period\] — Activity heatmap
+                /vis\_area \[period\] — Cumulative area chart
+                /vis\_scatter \[period\] — Student scatter map
+                /vis\_gauge \[period\] — License KPI gauge
+                /vis\_waterfall \[period\] — Period changes
+                /vis\_funnel \[period\] — Engagement funnel
+                /vis\_top \[period\] — Top contributors chart
+                /vis\_weekly \[period\] — Weekly comparison
+                /vis\_dayofweek \[period\] — Day\-of\-week patterns
+                /vis\_stacked \[period\] — Stacked status bars
+                /charts — Interactive chart gallery
 
-                📈 *Analytics*
+                📈 *Analytics \& Reports*
                 /top \[N\] — Top N contributors \(default: 10\)
                 /summary — Detailed analytics report
+                /report \[period\] — Full visual report \(all charts\)
+                /export — Enhanced CSV with analytics
 
                 📥 *Import*
                 /import — Import students from a CSV file
@@ -585,13 +637,26 @@ public static class Loc
 
                 📊 *Vizualizatsiya* \(ixtiyoriy: 1d, 7d, 30d\)
                 /vis\_activity \[davr\] — Faollik diagrammasi
-                /vis\_dist \[davr\] — Hissalar taqsimoti
+                /vis\_dist \[davr\] — Taqsimot histogrammasi
                 /vis\_trend \[davr\] — Trend grafigi
-                /vis\_pro \[davr\] — Faol/Nofaol nisbati
+                /vis\_pro \[davr\] — Faol/Nofaol donut
+                /vis\_heatmap \[davr\] — Issiqlik xaritasi
+                /vis\_area \[davr\] — Yig'ma maydon grafigi
+                /vis\_scatter \[davr\] — Talabalar scatter xaritasi
+                /vis\_gauge \[davr\] — Litsenziya KPI
+                /vis\_waterfall \[davr\] — Davr o'zgarishlari
+                /vis\_funnel \[davr\] — Jalb qilish voronkasi
+                /vis\_top \[davr\] — Top kontributorlar
+                /vis\_weekly \[davr\] — Haftalik taqqoslash
+                /vis\_dayofweek \[davr\] — Hafta kunlari
+                /vis\_stacked \[davr\] — Status bo'yicha
+                /charts — Interaktiv diagramma galereyasi
 
-                📈 *Analitika*
+                📈 *Analitika va hisobotlar*
                 /top \[N\] — Eng faol N ta talaba \(standart: 10\)
                 /summary — Batafsil analitika hisoboti
+                /report \[davr\] — To'liq vizual hisobot
+                /export — Kengaytirilgan CSV eksport
 
                 📥 *Import*
                 /import — CSV fayldan talabalarni import qilish
@@ -615,13 +680,26 @@ public static class Loc
 
                 📊 *Визуализация* \(опционально: 1d, 7d, 30d\)
                 /vis\_activity \[период\] — График активности
-                /vis\_dist \[период\] — Распределение вкладов
-                /vis\_trend \[период\] — График трендов
-                /vis\_pro \[период\] — Активные/Неактивные
+                /vis\_dist \[период\] — Гистограмма распределения
+                /vis\_trend \[период\] — Линия тренда
+                /vis\_pro \[период\] — Активные/Неактивные пончик
+                /vis\_heatmap \[период\] — Тепловая карта
+                /vis\_area \[период\] — Кумулятивная область
+                /vis\_scatter \[период\] — Карта активности
+                /vis\_gauge \[период\] — KPI лицензий
+                /vis\_waterfall \[период\] — Изменения за период
+                /vis\_funnel \[период\] — Воронка вовлечённости
+                /vis\_top \[период\] — Лучшие участники
+                /vis\_weekly \[период\] — Сравнение по неделям
+                /vis\_dayofweek \[период\] — По дням недели
+                /vis\_stacked \[период\] — По статусу
+                /charts — Галерея визуализаций
 
-                📈 *Аналитика*
+                📈 *Аналитика и отчёты*
                 /top \[N\] — Топ N участников \(по умолч\.: 10\)
                 /summary — Подробный аналитический отчёт
+                /report \[период\] — Полный визуальный отчёт
+                /export — Расширенный CSV с аналитикой
 
                 📥 *Импорт*
                 /import — Импорт студентов из CSV
@@ -680,6 +758,104 @@ public static class Loc
             ["en"] = "🔴 Critical",
             ["uz"] = "🔴 Kritik",
             ["ru"] = "🔴 Критический"
+        },
+
+        // ── New Chart Captions ──
+        ["vis_heatmap_caption"] = new()
+        {
+            ["en"] = "🔥 Activity Heatmap — {0}",
+            ["uz"] = "🔥 Faollik issiqlik xaritasi — {0}",
+            ["ru"] = "🔥 Тепловая карта активности — {0}"
+        },
+        ["vis_area_caption"] = new()
+        {
+            ["en"] = "📈 Cumulative Activity — {0}",
+            ["uz"] = "📈 Yig'ma faollik — {0}",
+            ["ru"] = "📈 Кумулятивная активность — {0}"
+        },
+        ["vis_scatter_caption"] = new()
+        {
+            ["en"] = "🔵 Student Activity Map — {0}",
+            ["uz"] = "🔵 Talabalar faollik xaritasi — {0}",
+            ["ru"] = "🔵 Карта активности студентов — {0}"
+        },
+        ["vis_gauge_caption"] = new()
+        {
+            ["en"] = "⚡ License Utilization KPI — {0}",
+            ["uz"] = "⚡ Litsenziya foydalanish KPI — {0}",
+            ["ru"] = "⚡ KPI использования лицензий — {0}"
+        },
+        ["vis_waterfall_caption"] = new()
+        {
+            ["en"] = "💧 Period Changes — {0}",
+            ["uz"] = "💧 Davr o'zgarishlari — {0}",
+            ["ru"] = "💧 Изменения за период — {0}"
+        },
+        ["vis_funnel_caption"] = new()
+        {
+            ["en"] = "🔻 Engagement Funnel — {0}",
+            ["uz"] = "🔻 Jalb qilish voronkasi — {0}",
+            ["ru"] = "🔻 Воронка вовлечённости — {0}"
+        },
+        ["vis_top_caption"] = new()
+        {
+            ["en"] = "🏆 Top Contributors — {0}",
+            ["uz"] = "🏆 Eng faol kontributorlar — {0}",
+            ["ru"] = "🏆 Лучшие участники — {0}"
+        },
+        ["vis_weekly_caption"] = new()
+        {
+            ["en"] = "📊 Weekly Comparison — {0}",
+            ["uz"] = "📊 Haftalik taqqoslash — {0}",
+            ["ru"] = "📊 Сравнение по неделям — {0}"
+        },
+        ["vis_dayofweek_caption"] = new()
+        {
+            ["en"] = "📅 Day-of-Week Patterns — {0}",
+            ["uz"] = "📅 Hafta kunlari bo'yicha faollik — {0}",
+            ["ru"] = "📅 Активность по дням недели — {0}"
+        },
+        ["vis_stacked_caption"] = new()
+        {
+            ["en"] = "📊 Contributions by Status — {0}",
+            ["uz"] = "📊 Status bo'yicha hissalar — {0}",
+            ["ru"] = "📊 Вклады по статусу — {0}"
+        },
+
+        // ── /charts menu ──
+        ["charts_menu_title"] = new()
+        {
+            ["en"] = "📊 *Visualization Gallery*\nChoose a chart type:",
+            ["uz"] = "📊 *Vizualizatsiya galereyasi*\nDiagramma turini tanlang:",
+            ["ru"] = "📊 *Галерея визуализаций*\nВыберите тип графика:"
+        },
+
+        // ── /report ──
+        ["report_generating"] = new()
+        {
+            ["en"] = "📊 Generating full report for {0}\\.\\.\\.",
+            ["uz"] = "📊 {0} uchun to'liq hisobot tayyorlanmoqda\\.\\.\\.",
+            ["ru"] = "📊 Формирование полного отчёта за {0}\\.\\.\\."
+        },
+        ["report_caption"] = new()
+        {
+            ["en"] = "Full Visual Report — {0}",
+            ["uz"] = "To'liq vizual hisobot — {0}",
+            ["ru"] = "Полный визуальный отчёт — {0}"
+        },
+        ["report_done"] = new()
+        {
+            ["en"] = "✅ {0} charts delivered for {1}",
+            ["uz"] = "✅ {1} uchun {0} ta diagramma yuborildi",
+            ["ru"] = "✅ {0} графиков доставлено за {1}"
+        },
+
+        // ── /export ──
+        ["export_generating"] = new()
+        {
+            ["en"] = "📊 Generating enhanced export\\.\\.\\.",
+            ["uz"] = "📊 Kengaytirilgan eksport tayyorlanmoqda\\.\\.\\.",
+            ["ru"] = "📊 Формирование расширенного экспорта\\.\\.\\."
         },
     };
 

@@ -270,6 +270,58 @@ public class TelegramBotService : BackgroundService
                     await SendVisProAsync(bot, chatId, parts, lang, ct);
                     break;
 
+                case "/vis_heatmap":
+                    await SendSnapshotChartAsync(bot, chatId, "heatmap", parts, lang, ct);
+                    break;
+
+                case "/vis_area":
+                    await SendSnapshotChartAsync(bot, chatId, "area", parts, lang, ct);
+                    break;
+
+                case "/vis_scatter":
+                    await SendSnapshotChartAsync(bot, chatId, "scatter", parts, lang, ct);
+                    break;
+
+                case "/vis_gauge":
+                    await SendSnapshotChartAsync(bot, chatId, "gauge", parts, lang, ct);
+                    break;
+
+                case "/vis_waterfall":
+                    await SendSnapshotChartAsync(bot, chatId, "waterfall", parts, lang, ct);
+                    break;
+
+                case "/vis_funnel":
+                    await SendSnapshotChartAsync(bot, chatId, "funnel", parts, lang, ct);
+                    break;
+
+                case "/vis_top":
+                    await SendSnapshotChartAsync(bot, chatId, "top", parts, lang, ct);
+                    break;
+
+                case "/vis_weekly":
+                    await SendSnapshotChartAsync(bot, chatId, "weekly", parts, lang, ct);
+                    break;
+
+                case "/vis_dayofweek":
+                    await SendSnapshotChartAsync(bot, chatId, "dayofweek", parts, lang, ct);
+                    break;
+
+                case "/vis_stacked":
+                    await SendSnapshotChartAsync(bot, chatId, "stacked", parts, lang, ct);
+                    break;
+
+                case "/charts":
+                    await SendChartsMenuAsync(bot, chatId, lang, ct);
+                    break;
+
+                case "/export":
+                    await SendEnhancedExportAsync(bot, chatId, lang, ct);
+                    break;
+
+                case "/report":
+                    await SendFullReportAsync(bot, chatId, parts, lang, ct);
+                    break;
+
                 // Head-only admin management
                 case "/add_admin":
                     await HandleAddAdminAsync(bot, chatId, parts, lang, ct);
@@ -354,8 +406,57 @@ public class TelegramBotService : BackgroundService
                     break;
                 }
                 default:
-                    await bot.AnswerCallbackQuery(callback.Id, cancellationToken: ct);
+                {
+                    // Handle chart menu callbacks: charts_{type}_{period}
+                    if (callback.Data.StartsWith("charts_"))
+                    {
+                        var lang = botUser.Language;
+                        if (!IsAdmin(botUser))
+                        {
+                            await bot.AnswerCallbackQuery(callback.Id, "⛔", cancellationToken: ct);
+                            return;
+                        }
+                        await bot.AnswerCallbackQuery(callback.Id, "📊 Generating...", cancellationToken: ct);
+
+                        var cbParts = callback.Data.Split('_');
+                        if (cbParts.Length >= 3)
+                        {
+                            var chartType = cbParts[1];
+                            var period = cbParts[2];
+                            // Map chart type to vis command parts format
+                            var fakeParts = new[] { $"/vis_{chartType}", period };
+
+                            switch (chartType)
+                            {
+                                case "activity":
+                                    await SendVisActivityAsync(bot, chatId, fakeParts, lang, ct);
+                                    break;
+                                case "dist":
+                                    await SendVisDistAsync(bot, chatId, fakeParts, lang, ct);
+                                    break;
+                                case "trend":
+                                    await SendVisTrendAsync(bot, chatId, fakeParts, lang, ct);
+                                    break;
+                                case "pro":
+                                    await SendVisProAsync(bot, chatId, fakeParts, lang, ct);
+                                    break;
+                                default:
+                                    await SendSnapshotChartAsync(bot, chatId, chartType, fakeParts, lang, ct);
+                                    break;
+                            }
+                        }
+                        else if (cbParts.Length == 2)
+                        {
+                            // Period selection: charts_period_{type} pages
+                            await SendChartPeriodMenuAsync(bot, chatId, cbParts[1], lang, ct);
+                        }
+                    }
+                    else
+                    {
+                        await bot.AnswerCallbackQuery(callback.Id, cancellationToken: ct);
+                    }
                     break;
+                }
             }
         }
         catch (Exception ex)
@@ -583,7 +684,8 @@ public class TelegramBotService : BackgroundService
                 GithubUsername = s.GithubUsername,
                 Email = s.Email,
                 LastActiveDate = s.LastActiveDate,
-                Status = s.Status.ToString()
+                Status = s.Status.ToString(),
+                DownloadedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss UTC")
             })
             .ToListAsync(ct);
 
@@ -1225,6 +1327,239 @@ public class TelegramBotService : BackgroundService
         }
     }
 
+    // ==================== /charts — Interactive Menu ====================
+
+    private async Task SendChartsMenuAsync(ITelegramBotClient bot, long chatId, string lang, CancellationToken ct)
+    {
+        var keyboard = new InlineKeyboardMarkup(new[]
+        {
+            // Row 1: Core charts
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("📊 Activity", "charts_activity"),
+                InlineKeyboardButton.WithCallbackData("📈 Trend", "charts_trend"),
+                InlineKeyboardButton.WithCallbackData("🥧 Status", "charts_pro"),
+            },
+            // Row 2: Distribution & Analysis
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("📊 Distribution", "charts_dist"),
+                InlineKeyboardButton.WithCallbackData("🔥 Heatmap", "charts_heatmap"),
+                InlineKeyboardButton.WithCallbackData("📈 Area", "charts_area"),
+            },
+            // Row 3: Advanced
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("🔵 Scatter", "charts_scatter"),
+                InlineKeyboardButton.WithCallbackData("⚡ Gauge", "charts_gauge"),
+                InlineKeyboardButton.WithCallbackData("💧 Waterfall", "charts_waterfall"),
+            },
+            // Row 4: Engagement
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("🔻 Funnel", "charts_funnel"),
+                InlineKeyboardButton.WithCallbackData("🏆 Top", "charts_top"),
+                InlineKeyboardButton.WithCallbackData("📊 Stacked", "charts_stacked"),
+            },
+            // Row 5: Patterns
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("📊 Weekly", "charts_weekly"),
+                InlineKeyboardButton.WithCallbackData("📅 Day-of-Week", "charts_dayofweek"),
+            },
+        });
+
+        var text = Loc.Get("charts_menu_title", lang);
+        await bot.SendMessage(chatId, text, parseMode: ParseMode.Markdown, replyMarkup: keyboard, cancellationToken: ct);
+    }
+
+    private async Task SendChartPeriodMenuAsync(ITelegramBotClient bot, long chatId, string chartType, string lang, CancellationToken ct)
+    {
+        var keyboard = new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("24h", $"charts_{chartType}_1d"),
+                InlineKeyboardButton.WithCallbackData("7 Days", $"charts_{chartType}_7d"),
+                InlineKeyboardButton.WithCallbackData("30 Days", $"charts_{chartType}_30d"),
+            }
+        });
+
+        await bot.SendMessage(chatId, $"📊 *Select period:*", parseMode: ParseMode.Markdown, replyMarkup: keyboard, cancellationToken: ct);
+    }
+
+    // ==================== Generic Snapshot Chart Sender ====================
+
+    private async Task SendSnapshotChartAsync(ITelegramBotClient bot, long chatId, string chartType, string[] parts, string lang, CancellationToken ct)
+    {
+        int days = ParseDays(parts);
+        var period = Loc.PeriodLabel(days, lang);
+        var captionKey = $"vis_{chartType}_caption";
+
+        string caption;
+        try { caption = Loc.Fmt(captionKey, lang, period); }
+        catch { caption = $"📊 {chartType} — {period}"; }
+
+        await bot.SendMessage(chatId, $"📊 {caption}...", cancellationToken: ct);
+
+        try
+        {
+            var snapshotBytes = _plotService.GetSnapshot($"{chartType}_{days}d");
+            if (snapshotBytes is not null)
+            {
+                using var ms = new MemoryStream(snapshotBytes);
+                await bot.SendPhoto(chatId, InputFile.FromStream(ms, $"{chartType}_{days}d.png"),
+                    caption: $"{caption} {Loc.Get("cached_snapshot", lang)}", cancellationToken: ct);
+                return;
+            }
+
+            // Fallback: generate on the fly if no snapshot
+            await bot.SendMessage(chatId,
+                $"⚠️ No cached snapshot for `{chartType}` ({period}). Run /sync\\_now first.",
+                parseMode: ParseMode.Markdown, cancellationToken: ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error sending {ChartType} chart", chartType);
+            await bot.SendMessage(chatId, Loc.Get("vis_error", lang), cancellationToken: ct);
+        }
+    }
+
+    // ==================== /report — Full visual report ====================
+
+    private async Task SendFullReportAsync(ITelegramBotClient bot, long chatId, string[] parts, string lang, CancellationToken ct)
+    {
+        int days = ParseDays(parts);
+        var period = Loc.PeriodLabel(days, lang);
+        await bot.SendMessage(chatId, Loc.Fmt("report_generating", lang, period), cancellationToken: ct);
+
+        try
+        {
+            var chartTypes = new[] { "activity", "trend", "pro", "dist", "heatmap", "area", "gauge", "stacked", "scatter", "funnel", "top", "waterfall", "weekly", "dayofweek" };
+            var photos = new List<InputMediaPhoto>();
+
+            foreach (var chartType in chartTypes)
+            {
+                var snapshotBytes = _plotService.GetSnapshot($"{chartType}_{days}d");
+                if (snapshotBytes is not null)
+                {
+                    var stream = new MemoryStream(snapshotBytes);
+                    var media = new InputMediaPhoto(InputFile.FromStream(stream, $"{chartType}_{days}d.png"));
+                    if (photos.Count == 0)
+                        media.Caption = $"📊 {Loc.Fmt("report_caption", lang, period)}\n🕐 {DateTime.UtcNow:yyyy-MM-dd HH:mm} UTC";
+                    photos.Add(media);
+                }
+            }
+
+            if (photos.Count == 0)
+            {
+                await bot.SendMessage(chatId, "⚠️ No cached charts available. Run /sync\\_now first.", parseMode: ParseMode.Markdown, cancellationToken: ct);
+                return;
+            }
+
+            // Telegram allows max 10 photos per album
+            for (int i = 0; i < photos.Count; i += 10)
+            {
+                var batch = photos.Skip(i).Take(10).ToList();
+                await bot.SendMediaGroup(chatId, batch, cancellationToken: ct);
+            }
+
+            await bot.SendMessage(chatId,
+                $"✅ {Loc.Fmt("report_done", lang, photos.Count, period)}",
+                cancellationToken: ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generating full report");
+            await bot.SendMessage(chatId, Loc.Get("vis_error", lang), cancellationToken: ct);
+        }
+    }
+
+    // ==================== /export — Enhanced Export ====================
+
+    private async Task SendEnhancedExportAsync(ITelegramBotClient bot, long chatId, string lang, CancellationToken ct)
+    {
+        try
+        {
+            await bot.SendMessage(chatId, Loc.Get("export_generating", lang), cancellationToken: ct);
+
+            using var scope = _scopeFactory.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var since30 = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-30));
+            var since7 = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-7));
+
+            // Get all students with contribution aggregates
+            var students = await db.Students.OrderBy(s => s.GithubUsername).ToListAsync(ct);
+            var contributions30d = await db.DailyContributions
+                .Where(dc => dc.Date >= since30)
+                .GroupBy(dc => dc.StudentId)
+                .Select(g => new
+                {
+                    StudentId = g.Key,
+                    Total30d = g.Sum(x => x.Count),
+                    ActiveDays30d = g.Count(x => x.Count > 0),
+                    MaxDay30d = g.Max(x => x.Count),
+                    LastContribDate = g.Max(x => x.Date)
+                })
+                .ToDictionaryAsync(x => x.StudentId, ct);
+
+            var contributions7d = await db.DailyContributions
+                .Where(dc => dc.Date >= since7)
+                .GroupBy(dc => dc.StudentId)
+                .Select(g => new { StudentId = g.Key, Total7d = g.Sum(x => x.Count), ActiveDays7d = g.Count(x => x.Count > 0) })
+                .ToDictionaryAsync(x => x.StudentId, ct);
+
+            var rows = students.Select(s =>
+            {
+                var c30 = contributions30d.GetValueOrDefault(s.Id);
+                var c7 = contributions7d.GetValueOrDefault(s.Id);
+                return new EnhancedExportRow
+                {
+                    UniversityId = s.UniversityId,
+                    GithubUsername = s.GithubUsername,
+                    Email = s.Email,
+                    Status = s.Status.ToString(),
+                    ContributionsLast7d = c7?.Total7d ?? 0,
+                    ActiveDaysLast7d = c7?.ActiveDays7d ?? 0,
+                    ContributionsLast30d = c30?.Total30d ?? 0,
+                    ActiveDaysLast30d = c30?.ActiveDays30d ?? 0,
+                    MaxDayContributions = c30?.MaxDay30d ?? 0,
+                    LastContributionDate = c30 != null ? c30.LastContribDate.ToString("yyyy-MM-dd") : "N/A",
+                    LastActiveDate = s.LastActiveDate?.ToString("yyyy-MM-dd HH:mm") ?? "N/A",
+                    RegisteredDate = s.CreatedAt.ToString("yyyy-MM-dd"),
+                    DownloadedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss UTC")
+                };
+            }).ToList();
+
+            using var memoryStream = new MemoryStream();
+            using (var writer = new StreamWriter(memoryStream, Encoding.UTF8, leaveOpen: true))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(rows);
+            }
+
+            memoryStream.Position = 0;
+            var active = students.Count(s => s.Status == StudentStatus.Active);
+            var inactive = students.Count(s => s.Status == StudentStatus.Inactive);
+            var pending = students.Count(s => s.Status == StudentStatus.Pending_Removal);
+            var fileName = $"github_activity_report_{DateTime.UtcNow:yyyyMMdd_HHmm}.csv";
+            var document = InputFile.FromStream(memoryStream, fileName);
+
+            var captionText = $"📊 *GitHub Activity Report*\n" +
+                              $"📅 Generated: {DateTime.UtcNow:yyyy-MM-dd HH:mm} UTC\n" +
+                              $"👥 Total: {students.Count:N0} | ✅ {active} | ⚠️ {inactive} | 🔴 {pending}\n" +
+                              $"📈 Includes: 7d & 30d contributions, active days, peak day, last activity";
+
+            await bot.SendDocument(chatId, document, caption: captionText, parseMode: ParseMode.Markdown, cancellationToken: ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generating enhanced export");
+            await bot.SendMessage(chatId, Loc.Get("vis_error", lang), cancellationToken: ct);
+        }
+    }
+
     // ==================== Head Admin Commands ====================
 
     private async Task HandleAddAdminAsync(ITelegramBotClient bot, long chatId, string[] parts, string lang, CancellationToken ct)
@@ -1328,6 +1663,52 @@ public class InactiveCsvRow
     public string Email { get; set; } = string.Empty;
     public DateTime? LastActiveDate { get; set; }
     public string Status { get; set; } = string.Empty;
+    public string DownloadedAt { get; set; } = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss UTC");
+}
+
+/// <summary>
+/// Enhanced CSV row model for full activity export with contribution analytics.
+/// </summary>
+public class EnhancedExportRow
+{
+    [Name("university_id")]
+    public string UniversityId { get; set; } = string.Empty;
+
+    [Name("github_username")]
+    public string GithubUsername { get; set; } = string.Empty;
+
+    [Name("email")]
+    public string Email { get; set; } = string.Empty;
+
+    [Name("status")]
+    public string Status { get; set; } = string.Empty;
+
+    [Name("contributions_7d")]
+    public int ContributionsLast7d { get; set; }
+
+    [Name("active_days_7d")]
+    public int ActiveDaysLast7d { get; set; }
+
+    [Name("contributions_30d")]
+    public int ContributionsLast30d { get; set; }
+
+    [Name("active_days_30d")]
+    public int ActiveDaysLast30d { get; set; }
+
+    [Name("max_day_contributions")]
+    public int MaxDayContributions { get; set; }
+
+    [Name("last_contribution_date")]
+    public string LastContributionDate { get; set; } = string.Empty;
+
+    [Name("last_active_date")]
+    public string LastActiveDate { get; set; } = string.Empty;
+
+    [Name("registered_date")]
+    public string RegisteredDate { get; set; } = string.Empty;
+
+    [Name("downloaded_at")]
+    public string DownloadedAt { get; set; } = string.Empty;
 }
 
 /// <summary>
